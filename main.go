@@ -15,11 +15,11 @@ import (
 	"gitee.com/phper95/pkg/trace"
 	"github.com/go-redis/redis/v7"
 	"go.uber.org/zap"
+	"mail-search/config"
+	"mail-search/global"
+	"mail-search/internal/server/api"
+	"mail-search/metric"
 	"net/http"
-	"shop-search-api/config"
-	"shop-search-api/global"
-	"shop-search-api/internal/server/api"
-	"shop-search-api/metric"
 	"time"
 )
 
@@ -28,7 +28,7 @@ func init() {
 	InitLog()
 	initMysqlClient()
 	initRedisClient()
-	initMongoClient()
+	//initMongoClient()
 	initESClient()
 	initProme()
 }
@@ -99,7 +99,7 @@ func initMongoClient() {
 }
 
 func initProme() {
-	prome.InitPromethues(config.Cfg.Prome.Host, time.Second*60, config.AppName, httpclient.DefaultClient, metric.ProductSearch)
+	prome.InitPromethues(config.Cfg.Prome.Host, time.Second*60, config.AppName, httpclient.DefaultClient, metric.MailSearch)
 }
 func main() {
 	router := api.InitRouter()

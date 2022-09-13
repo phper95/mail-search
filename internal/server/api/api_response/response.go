@@ -2,7 +2,7 @@ package api_response
 
 import (
 	"github.com/gin-gonic/gin"
-	"shop-search-api/internal/pkg/errcode"
+	"mail-search/internal/pkg/errcode"
 )
 
 type Gin struct {

@@ -5,9 +5,9 @@ import (
 	"gitee.com/phper95/pkg/logger"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
-	"shop-search-api/config"
-	"shop-search-api/internal/repo/mysql/auth_repo"
-	"shop-search-api/internal/server/api/api_response"
+	"mail-search/config"
+	"mail-search/internal/repo/mysql/auth_repo"
+	"mail-search/internal/server/api/api_response"
 )
 
 // CacheAuthorizedData 缓存结构

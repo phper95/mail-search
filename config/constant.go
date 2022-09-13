@@ -3,7 +3,7 @@ package config
 import "time"
 
 const (
-	AppName = "shop-search-api"
+	AppName = "mail-search"
 	//Header 中传递的参数字段，其携带的值为接口的签名
 	HeaderAuthField = "Authorization"
 

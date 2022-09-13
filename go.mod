@@ -1,4 +1,4 @@
-module shop-search-api
+module mail-search
 
 go 1.16
 
@@ -14,7 +14,7 @@ require (
 	gitee.com/phper95/pkg/prome v0.0.0-20220724162038-b78433a64c97
 	gitee.com/phper95/pkg/shutdown v0.0.0-20220724124223-a4f7b6c91282
 	gitee.com/phper95/pkg/sign v0.0.0-20220724124223-a4f7b6c91282
-	gitee.com/phper95/pkg/strutil v0.0.0-20220814230036-38ccc10b9934
+	gitee.com/phper95/pkg/strutil v0.0.0-20220731025737-d3ae776d951b
 	gitee.com/phper95/pkg/timeutil v0.0.0-20220731025737-d3ae776d951b
 	gitee.com/phper95/pkg/trace v0.0.0-20220724124223-a4f7b6c91282
 	github.com/fsnotify/fsnotify v1.5.1

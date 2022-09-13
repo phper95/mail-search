@@ -3,13 +3,13 @@ package auth
 import (
 	"gitee.com/phper95/pkg/logger"
 	"github.com/gin-gonic/gin"
-	"shop-search-api/config"
-	"shop-search-api/global"
-	"shop-search-api/internal/pkg/errcode"
-	"shop-search-api/internal/pkg/sign"
-	"shop-search-api/internal/repo/mysql/auth_repo"
-	"shop-search-api/internal/server/api/api_response"
-	"shop-search-api/internal/service/auth_service"
+	"mail-search/config"
+	"mail-search/global"
+	"mail-search/internal/pkg/errcode"
+	"mail-search/internal/pkg/sign"
+	"mail-search/internal/repo/mysql/auth_repo"
+	"mail-search/internal/server/api/api_response"
+	"mail-search/internal/service/auth_service"
 	"strings"
 )
 

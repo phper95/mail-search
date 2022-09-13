@@ -4,15 +4,15 @@ import (
 	"fmt"
 	"gitee.com/phper95/pkg/httpclient"
 	"gitee.com/phper95/pkg/sign"
+	"mail-search/config"
 	"net/http"
 	"net/url"
-	"shop-search-api/config"
 	"testing"
 	"time"
 )
 
-const ProductSearchHost = "http://127.0.0.1:9090"
-const ProductSearchUri = "/api/v1/product-search"
+const MailSearchHost = "http://127.0.0.1:9099"
+const MailSearchUri = "/api/v1/mail-search"
 
 var (
 	ak  = "AK100523687952"
@@ -23,16 +23,16 @@ var (
 func TestProductSearch(t *testing.T) {
 	params := url.Values{}
 	params.Add("userid", "1")
-	params.Add("keyword", "手机")
+	params.Add("keyword", "测试")
 	params.Add("page_num", "1")
 	params.Add("page_size", "10")
-	authorization, date, err := sign.New(ak, sk, ttl).Generate(ProductSearchUri, http.MethodGet, params)
+	authorization, date, err := sign.New(ak, sk, ttl).Generate(MailSearchUri, http.MethodGet, params)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 	headerAuth := httpclient.WithHeader(config.HeaderAuthField, authorization)
 	headerAuthDate := httpclient.WithHeader(config.HeaderAuthDateField, date)
-	c, r, e := httpclient.Get(ProductSearchHost+ProductSearchUri, params, headerAuth, headerAuthDate)
+	c, r, e := httpclient.Get(MailSearchHost+MailSearchUri, params, headerAuth, headerAuthDate)
 	fmt.Println(c, string(r), e)
 }

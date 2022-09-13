@@ -3,7 +3,7 @@ package auth_service
 import (
 	"gitee.com/phper95/pkg/cache"
 	"gorm.io/gorm"
-	"shop-search-api/internal/server/api/api_response"
+	"mail-search/internal/server/api/api_response"
 )
 
 type Service interface {
