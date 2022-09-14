@@ -19,6 +19,7 @@ var (
 
 type Mail struct {
 	UserID     int64  `json:"userid" bson:"userid"`
+	Email      string `json:"email" bson:"email"`
 	Keyword    string `json:"keyword" bson:"keyword"`
 	PageNum    int    `json:"page_num" bson:"page_num"`
 	PageSize   int    `json:"page_size" bson:"page_size"`
@@ -34,7 +35,7 @@ func (m *Mail) SearchMail() (result *elastic.SearchResult, err error) {
 	subjectMatchPhreaseQuery := elastic.NewMatchPhraseQuery("subject", m.Keyword).Boost(2).QueryName("subjectMatchPhraseQuery")
 	contentMatchQuery := elastic.NewMatchPhraseQuery("content", m.Keyword).Boost(1).QueryName("contentMatchQuery")
 
-	query.Must(elastic.NewTermQuery("to", m.UserID))
+	query.Must(elastic.NewTermQuery("to", m.Email))
 
 	query.Should(subjectMatchPhreaseQuery, contentMatchQuery)
 
@@ -43,10 +44,16 @@ func (m *Mail) SearchMail() (result *elastic.SearchResult, err error) {
 	//默认按照相关度算分来排序
 	orders = append(orders, map[string]bool{"_score": false})
 
+	//高亮
+	highlight := elastic.NewHighlight()
+	highlight.NumOfFragments(1) //默认值5
+	highlight.FragmentSize(200) //默认值100
+	highlight.Field("subject")
+
 	return global.ES.Query(context.Background(), global.MailIndexName,
 		[]string{strutil.Int64ToString(m.UserID)}, query, from, m.PageSize, es.WithEnableDSL(true),
 		es.WithPreference(strutil.Int64ToString(m.UserID)),
-		es.WithFetchSource(true), es.WithOrders(orders))
+		es.WithFetchSource(true), es.WithOrders(orders), es.WithHighlight(highlight))
 }
 
 func (m *Mail) LogReport() {

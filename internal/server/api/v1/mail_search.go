@@ -15,8 +15,13 @@ import (
 )
 
 type serchResponse struct {
-	Total int64                  `json:"total"`
-	Hits  []*mail_repo.MailIndex `json:"hits"`
+	Total int64         `json:"total"`
+	Hits  []*mailResult `json:"hits"`
+}
+
+type mailResult struct {
+	mail_repo.MailIndex
+	Highlight map[string][]string `json:"highlight"`
 }
 
 func MailSearch(c *gin.Context) {
@@ -37,11 +42,19 @@ func MailSearch(c *gin.Context) {
 		appG.ResponseErr(errcode.ErrCodes.ErrParams)
 		return
 	}
+
+	email := c.Query("email")
+	if len(email) == 0 {
+		appG.ResponseErr(errcode.ErrCodes.ErrParams)
+		return
+	}
+
 	mailService := mail_service.Mail{
 		Keyword:  keyword,
 		PageNum:  com.StrTo(c.Query("page_num")).MustInt(),
 		PageSize: com.StrTo(c.Query("page_size")).MustInt(),
 		UserID:   com.StrTo(c.Query("userid")).MustInt64(),
+		Email:    email,
 	}
 
 	//上报搜索日志
@@ -64,7 +77,7 @@ func MailSearch(c *gin.Context) {
 	}
 	resp := serchResponse{
 		Total: 0,
-		Hits:  make([]*mail_repo.MailIndex, 0),
+		Hits:  make([]*mailResult, 0),
 	}
 	if res == nil {
 		appG.ResponseOk(errcode.ErrCodes.ErrNo, resp)
@@ -72,18 +85,27 @@ func MailSearch(c *gin.Context) {
 	}
 	resp.Total = res.Hits.TotalHits.Value
 	for _, hit := range res.Hits.Hits {
-		index := &mail_repo.MailIndex{}
-		err = json.Unmarshal(hit.Source, index)
+		index := &mailResult{}
+		indexValue := &mail_repo.MailIndex{}
+		err = json.Unmarshal(hit.Source, indexValue)
 		if err != nil {
 			global.LOG.Error("Unmarshal error", zap.Error(err))
 			continue
 		}
+		index.Id = indexValue.Id
+		index.Uid = indexValue.Uid
+		index.Subject = indexValue.Subject
+		index.MailFrom = indexValue.MailFrom
+		index.MailTo = indexValue.MailTo
+		index.SendTime = indexValue.SendTime
+		index.Type = indexValue.Type
+		index.Highlight = hit.Highlight
+		resp.Hits = append(resp.Hits, index)
 		//index.Id, err = strconv.ParseInt(hit.Id, 10, 64)
 		//if err != nil {
 		//	global.LOG.Error("strconv.ParseInt error", zap.Error(err), zap.String("id", hit.Id))
 		//	continue
 		//}
-		resp.Hits = append(resp.Hits, index)
 	}
 	global.LOG.Warn("resp", zap.Any("resp", resp))
 	appG.ResponseOk(errcode.ErrCodes.ErrNo, resp)
